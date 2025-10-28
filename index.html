@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Join the Moxie Waitlist</title>
+<style>
+  body {
+    font-family: 'Georgia', serif;
+    background: linear-gradient(145deg, #f7f2e9 0%, #efe5d2 100%);
+    color: #2b2117;
+    text-align: center;
+    padding: 2em;
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  }
+  h2 { color: #4a2f14; text-shadow: 1px 1px #fff1d6; }
+  form {
+    display: inline-block; margin-top: 2em; padding: 2em;
+    border: 1px solid #d7c7a2; border-radius: 10px;
+    background: rgba(255, 250, 243, 0.85);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  input, select, button {
+    padding: 0.8em; border-radius: 6px; border: 1px solid #cbb78b;
+    margin: 0.4em; font-size: 1em; font-family: inherit;
+  }
+  input:focus, select:focus { outline: 2px solid #b16b2e; }
+  button {
+    background: #b16b2e; color: white; cursor: pointer; transition: background 0.2s;
+  }
+  button:hover { background: #8c4f1d; }
+  #msg { font-size: 0.95em; opacity: 0.9; margin-top: 1em; }
+  .privacy { font-size: 0.9em; opacity: 0.8; margin-top: 1.2em; }
+</style>
+</head>
+<body>
+  <h2>Join the Moxie Waitlist</h2>
+  <form id="waitlist">
+    <input type="text" name="first_name" placeholder="Your first name" required /><br>
+    <input type="email" name="email" placeholder="Enter your email" required /><br>
+    <select name="how_found" required>
+      <option value="">How did you find us?</option>
+      <option>Canva</option><option>Instagram</option><option>Friend</option>
+      <option>Search Engine</option><option>Other</option>
+    </select><br>
+    <div style="margin:0.5em 0;">
+      <label for="captcha">Type this word: <b>Moxie</b></label><br>
+      <input id="captcha" name="captcha" placeholder="Enter here" required />
+    </div>
+    <label><input type="checkbox" name="consent" required /> I consent to join the Moxie waitlist.</label><br>
+    <button type="submit">Join Waitlist</button>
+    <p id="msg"></p>
+    <p class="privacy">🔒 <b>Privacy First:</b> Your info is securely stored in our Supabase database and never shared.</p>
+  </form>
+  <script>
+  const URL = "https://fhtjnzeoahqmdodgewiz.supabase.co/rest/v1/waitlist";
+  const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZodGpuemVvYWhxbWRvZGdld2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI5MzYsImV4cCI6MjA3MjIyODkzNn0.CqC50TXKRyYwJAEamPt57fwAN3szQ1eiI0PDW8qXGek";
+  const REDIRECT = "https://your-canva-site-url"; 
+  document.getElementById("waitlist").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    const captcha = fd.get("captcha");
+    if (captcha.toLowerCase() !== "moxie") {
+      document.getElementById("msg").textContent = "Captcha incorrect. Try again.";
+      return;
+    }
+    const body = {
+      email: fd.get("email"),
+      first_name: fd.get("first_name"),
+      how_found: fd.get("how_found"),
+      consent: !!fd.get("consent")
+    };
+    const res = await fetch(URL + "?apikey=" + KEY, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + KEY,
+        "Prefer": "return=minimal"
+      },
+      body: JSON.stringify(body)
+    });
+    if (res.ok) {
+      window.location.href = REDIRECT + "?thanks=1";
+    } else {
+      document.getElementById("msg").textContent = "Submission failed. Please try again.";
+    }
+  });
+  </script>
+</body>
+</html>
