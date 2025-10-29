@@ -205,9 +205,9 @@ form.addEventListener("submit", async (ev) => {
     const res = await fetch(WAITLIST_ENDPOINT, {
       method: "POST",
       headers: {
-    "Content-Type": "application/json";
+    "Content-Type": "application/json",
     // required because your Edge Function is set to "Verify JWT with legacy secret"
-    "Authorization": `Bearer ${ANON_KEY}`;
+    "Authorization": `Bearer ${ANON_KEY}`,
     // duplicate header is commonly shown in Supabase examples — useful for some infra
     "apikey": ANON_KEY;
     "Accept": "application/json"
