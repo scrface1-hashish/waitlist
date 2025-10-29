@@ -151,11 +151,10 @@
 /*
   CLIENT SIDE: lightweight validation + POST to a secure endpoint.
   IMPORTANT: Do NOT put a service_role or secret key here.
-  
 */
 
 const WAITLIST_ENDPOINT = "https://fhtjnzeoahqmdodgewiz.supabase.co/functions/v1/waitlist"; // REPLACE w/ your Edge Function URL
-const ANON_KEY = "sb_publishable_RHjHGgwEJ2Guksq6gZqsCw_omDTeBlw";
+const ANON_KEY = "sb_publishable_RHjHGgwEJ2Guksq6gZqsCw_omDTeBlw"; // publishable / anon key (safe client-side)
 const REDIRECT = "https://scrface1-hashish.github.io/waitlist/thankyou.html";
 
 const form = document.getElementById("waitlist");
@@ -196,18 +195,12 @@ form.addEventListener("submit", async (ev) => {
   try {
     const payload = { email, first_name, how_found, consent };
 
-    /*
-      Recommended: POST to your serverless proxy / edge function
-      POST JSON: { email, first_name, how_found, consent }
-      The server (Edge Function) validates and then writes to Supabase using a secure server-side key.
-    */
     const res = await fetch(WAITLIST_ENDPOINT, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // required because your Edge Function is set to "Verify JWT with legacy secret"
+        // required when your function expects a verified header — use anon key not service_role
         "Authorization": `Bearer ${ANON_KEY}`,
-        // duplicate header is commonly shown in Supabase examples — useful for some infra
         "apikey": ANON_KEY,
         "Accept": "application/json"
       },
@@ -222,12 +215,14 @@ form.addEventListener("submit", async (ev) => {
     }
 
     // read error message if any
-    const body = await res.json().catch(()=>null);
-    const err = body && body.message ? body.message : "Submission failed. Try again later.";
+    let body = null;
+    try { body = await res.json(); } catch(e) { body = null; }
+    const err = body && body.message ? body.message : ("Submission failed. Try again later. (HTTP " + res.status + ")");
     setMsg(err, true);
+    console.error("Waitlist submit failed:", res.status, body);
 
   } catch (err) {
-    console.error(err);
+    console.error("Network/submit error:", err);
     setMsg("Network error. Try again later.", true);
   } finally {
     btn.disabled = false;
