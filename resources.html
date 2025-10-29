@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Safety & Resources — Moxie</title>
+<style>
+  /* ========== Theme knobs — tweak these first ========== */
+  :root{
+    --page-max-width: 880px;         /* overall content width */
+    --page-pad: 40px;                 /* page side padding */
+    --bg-img: url('./img/moxie-forest.png');
+    --panel-bg: rgba(255,250,243,0.92);
+    --panel-border: #d7c7a2;
+    --accent: #b16b2e;
+    --muted-text: #6a533f;
+    --card-radius: 12px;
+    --card-shadow: 0 14px 40px rgba(24,18,12,0.16);
+    --grid-gap: 15px;
+
+    /* brand icon controls */
+    --icon-size: 100px;                /* change to scale fox badge */
+    --icon-overlap: calc(var(--icon-size) / 3); /* used to offset hero */
+    --icon-left: 50%;                 /* center by default */
+  }
+
+  /* ========== Page baseline ========== */
+  html,body{ height:100%; }
+  body{
+    margin:0;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #2b2117;
+    background: #efe5d2;
+    background-image: var(--bg-img);
+    background-size: cover;
+    background-position: center;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    display:flex;
+    justify-content:center;
+    padding: 32px var(--page-pad);
+  }
+
+  /* outer container to control width and centering */
+  .wrap{
+    width:100%;
+    max-width:var(--page-max-width);
+    margin:0 auto;
+  }
+
+  /* Hero panel (full width visual header) */
+  .hero {
+    position:relative;
+    background: var(--panel-bg);
+    border:1px solid var(--panel-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: 34px clamp(18px, 3.5vw, 40px);
+    margin-bottom: var(--grid-gap);
+    text-align:center;
+    overflow:visible; /* allow icon overlap */
+  }
+
+  /* ensure hero has top padding so the icon doesn't block text */
+  .hero {
+    padding-top: calc(35px + var(--icon-overlap));
+  }
+
+  .site-title {
+    margin:0;
+    font-size: clamp(28px, 3.8vw, 44px);
+    color:#4a2f14;
+    text-shadow: 1px 1px #fff1d6;
+  }
+
+  .banner {
+    display:inline-block;
+    margin-top:14px;
+    background:#fdecec;
+    color:#9b1c1c;
+    border-radius:10px;
+    border:1px solid rgba(155,28,28,.18);
+    padding:12px 16px;
+    font-weight:600;
+  }
+
+  /* The floating brand icon — use an actual <img> for crisp scaling */
+  .brand-icon {
+    position:absolute;
+    top: calc(-1 * var(--icon-overlap));
+    left: var(--icon-left);
+    transform: translateX(-50%);
+    width: var(--icon-size);
+    height: var(--icon-size);
+    border-radius:50%;
+    border:4px solid rgba(255,250,243,0.95);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    display:block;
+    background:transparent;
+    object-fit:cover;      /* preserves aspect, prevents blur */
+    image-rendering: auto; /* don't force pixelation */
+  }
+
+  /* ========== Grid layout for cards ========== */
+  .grid {
+    display:grid;
+    grid-template-columns: 1fr; /* mobile-first single column */
+    gap: var(--grid-gap);
+    margin-bottom: var(--grid-gap);
+  }
+
+  /* At wider sizes show two columns for the top resource cards */
+  @media(min-width:900px){
+    .grid { grid-template-columns: repeat(2, minmax(320px, 1fr)); }
+  }
+
+  /* general card */
+  .card{
+    background: var(--panel-bg);
+    border:1px solid var(--panel-border);
+    border-radius: var(--card-radius);
+    box-shadow: var(--card-shadow);
+    padding: clamp(16px, 2.6vw, 28px);
+    color: #3b2b20;
+  }
+
+  /* make some cards span full width (useful below) */
+  .full-width { grid-column: 1 / -1; }
+
+  /* headings inside cards */
+  .card h2{
+    margin-top: 0;
+    color:#4a2f14;
+    font-size: 1.6rem;
+  }
+
+  ul { margin:0.6rem 0 0 1.15rem; color:var(--muted-text) }
+  p.muted { color:var(--muted-text); margin:12px 0 0; }
+
+  /* small utility / CTA */
+  a.btn {
+    display:inline-block;
+    margin-top:10px;
+    padding:10px 16px;
+    background:var(--accent);
+    color:#fff;
+    border-radius:10px;
+    text-decoration:none;
+    font-weight:600;
+  }
+  a.btn:hover{ background:#8c4f1d; }
+
+  /* ========== Helpful tweak comments for you (change safely) ========== */
+  /*
+    - To change the overall page width: edit --page-max-width in :root.
+    - To change card corner size: edit --card-radius.
+    - To adjust two-column breakpoint: change @media(min-width:900px) value.
+    - To make the top two resource cards narrower/wider: modify the minmax(320px, 1fr) value.
+    - To change icon size/position: edit --icon-size and --icon-left.
+    - To make hero taller so icon doesn't overlap: change .hero padding-top formula.
+  */
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- HERO with brand icon overlapping (icon is an <img> for crisp rendering) -->
+    <section class="hero" aria-labelledby="heading">
+      <img class="brand-icon" src="./img/moxie-icon.png" alt="Moxie mascot" width="200" height="200" />
+      <h1 id="heading" class="site-title">Safety &amp; Resources</h1>
+      <div class="banner" role="note">⚠️ Immediate help: US <strong>988</strong> (call/text/chat) • Text <strong>HOME</strong> to <strong>741741</strong> • Dial <strong>911</strong> if in danger</div>
+    </section>
+
+    <!-- Top resource cards: responsive 1 / 2 column grid -->
+    <div class="grid" role="list">
+      <!-- Quick Links (left) -->
+      <section class="card" role="listitem" aria-label="Quick Links (US)">
+        <h2>Quick Links (US)</h2>
+        <ul>
+          <li><a href="https://988lifeline.org/chat/" target="_blank" rel="noopener">988 Suicide &amp; Crisis Lifeline — Chat</a></li>
+          <li><a href="https://www.crisistextline.org/" target="_blank" rel="noopener">Crisis Text Line — 741741</a></li>
+          <li><a href="https://www.thehotline.org/" target="_blank" rel="noopener">National Domestic Violence Hotline</a></li>
+          <li><a href="https://www.thetrevorproject.org/get-help/" target="_blank" rel="noopener">The Trevor Project</a></li>
+          <li><a href="https://www.veteranscrisisline.net/" target="_blank" rel="noopener">Veterans Crisis Line</a></li>
+        </ul>
+      </section>
+
+      <!-- International (right) -->
+      <section class="card" role="listitem" aria-label="International resources">
+        <h2>International</h2>
+        <ul>
+          <li><a href="https://www.opencounseling.com/suicide-hotlines" target="_blank" rel="noopener">Global Crisis Hotlines by Country</a></li>
+          <li><a href="https://www.sos-helpline.org/en/links/" target="_blank" rel="noopener">International helplines (directory)</a></li>
+        </ul>
+        <p class="muted">If you can’t find your country, contact local emergency services.</p>
+      </section>
+    </div>
+
+    <!-- Larger explanatory panels below (full width) -->
+    <section class="card full-width" aria-labelledby="what-moxie">
+      <h2 id="what-moxie">What Moxie Does / Doesn’t</h2>
+      <div style="display:flex;gap:36px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:220px">
+          <ul>
+            <li>Helps you pause, reflect, and reframe.</li>
+            <li>Suggests small, kind next steps for calmer talk.</li>
+            <li>Spots patterns over time to guide better choices.</li>
+          </ul>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <ul>
+            <li>Doesn’t diagnose, treat, or provide therapy.</li>
+            <li>Doesn’t offer legal, medical, or crisis advice.</li>
+            <li>Doesn’t replace professional help when needed.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+<br>
+    <section class="card full-width" aria-labelledby="privacy">
+      <h2 id="privacy">Privacy &amp; Safeguards</h2>
+      <ul>
+        <li>Your words stay yours — stored securely with modern standards.</li>
+        <li>No public sharing; we don’t sell personal data.</li>
+        <li>Moxie learns overall patterns, not personal stories.</li>
+      </ul>
+      <a class="btn" href="mailto:moxie-mediation@proton.me">Request Data Info</a>
+    </section>
+<br>
+  </div>
+</body>
+</html>

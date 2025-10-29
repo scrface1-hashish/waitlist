@@ -1,90 +1,232 @@
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Join the Moxie Waitlist</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Moxie — Join the Waitlist</title>
 <style>
-  body {
-    font-family: 'Georgia', serif;
-    background: linear-gradient(145deg, #f7f2e9 0%, #efe5d2 100%);
-    color: #2b2117;
-    text-align: center;
-    padding: 2em;
-    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+  :root{
+    --bg-url: url('./img/moxie-forest.png');
+    --icon-url: url('./img/moxie-icon.png');
+    --panel-w: min(920px, 94vw);
+    --panel-pad: 28px;
+    --accent:#b16b2e;
+    --accent-dark:#8c4f1d;
+    --text:#2b2117;
+    --muted: #6b5e50;
+    --radius:14px;
   }
-  h2 { color: #4a2f14; text-shadow: 1px 1px #fff1d6; }
-  form {
-    display: inline-block; margin-top: 2em; padding: 2em;
-    border: 1px solid #d7c7a2; border-radius: 10px;
-    background: rgba(255, 250, 243, 0.85);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+  /* page */
+  html,body { height:100%; margin:0; }
+  body{
+    font-family: Georgia, 'Times New Roman', serif;
+    color:var(--text);
+    background: var(--bg-url) center top / cover no-repeat fixed;
+    display:flex; align-items:center; justify-content:center;
+    padding:40px 20px;
+    background-color:#efe5d2; /* fallback */
   }
-  input, select, button {
-    padding: 0.8em; border-radius: 6px; border: 1px solid #cbb78b;
-    margin: 0.4em; font-size: 1em; font-family: inherit;
+
+  /* center parchment card */
+  .card{
+    width:var(--panel-w);
+    background: rgba(255,250,243,0.92);
+    border-radius: var(--radius);
+    border:1px solid rgba(215,199,162,0.9);
+    padding: clamp(16px, 3.2vw, var(--panel-pad));
+    box-shadow: 0 24px 60px rgba(0,0,0,.18);
+    position:relative;
+    backdrop-filter: blur(2px);
   }
-  input:focus, select:focus { outline: 2px solid #b16b2e; }
-  button {
-    background: #b16b2e; color: white; cursor: pointer; transition: background 0.2s;
+
+  /* floating circular icon (adjust size w/ --icon-size) */
+  .brand {
+    --icon-size:120px;
+    position:absolute;
+    top: -65px; /* pulls icon up so it's partially above card */
+    left: 50%;
+    transform: translateX(-50%);
+    width:var(--icon-size);
+    height:var(--icon-size);
+    border-radius:50%;
+    background: var(--icon-url) center / cover no-repeat;
+    box-shadow: 0 8px 28px rgba(0,0,0,.22);
+    border:4px solid rgba(255,250,243,0.85);
   }
-  button:hover { background: #8c4f1d; }
-  #msg { font-size: 0.95em; opacity: 0.9; margin-top: 1em; }
-  .privacy { font-size: 0.9em; opacity: 0.8; margin-top: 1.2em; }
+
+  h1 { text-align:center; margin:36px 0 18px; color:#4a2f14; font-size:2.25rem; text-shadow:1px 1px 0 #fff1d6; }
+  form{ max-width:640px; margin:0 auto; }
+
+  /* skinny, modern form controls */
+  .field{ display:block; margin:10px 0; }
+  input[type="text"], input[type="email"], select {
+    width:100%;
+    padding:10px 12px;
+    border-radius:10px;
+    border:1px solid #cbb78b;
+    font-size:1rem;
+    box-sizing:border-box;
+    background:transparent;
+  }
+  input[type="text"]::placeholder, input[type="email"]::placeholder { color: #8a7a6a; }
+  input[type="text"]:focus, input[type="email"]:focus, select:focus { outline:3px solid rgba(177,107,46,0.12); box-shadow:0 0 0 3px rgba(177,107,46,0.06) }
+
+  .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  .half{ flex:1 1 48%; min-width:160px; }
+  .full{ flex:1 1 100%; }
+
+  .captcha-line{ display:flex; gap:10px; align-items:center; }
+  .captcha-label { font-weight:600; color:var(--muted); min-width:120px; text-align:left; }
+
+  label.muted { display:block; margin:12px 0; color:var(--muted); font-size:.95rem; }
+  .consent { display:flex; gap:10px; align-items:center; justify-content:center; margin-top:8px; }
+
+  button.btn {
+    display:block;
+    margin:18px auto 6px;
+    padding:10px 18px;
+    background:var(--accent);
+    color:#fff;
+    border:none;
+    border-radius:10px;
+    font-weight:600;
+    cursor:pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,.12);
+  }
+  button.btn:hover{ background:var(--accent-dark) }
+
+  p.msg { text-align:center; color:var(--muted); margin:8px 0 0; min-height:1.2em; }
+
+  footer.note { text-align:center; color:var(--muted); margin-top:8px; font-size:.95rem; }
+
+  /* responsive tweaks */
+  @media (max-width:560px){
+    h1 { font-size:1.6rem; margin-top:20px; }
+    .brand{ --icon-size:68px; top:-34px; }
+  }
 </style>
 </head>
 <body>
-  <h2>Join the Moxie Waitlist</h2>
-  <form id="waitlist">
-    <input type="text" name="first_name" placeholder="Your first name" required /><br>
-    <input type="email" name="email" placeholder="Enter your email" required /><br>
-    <select name="how_found" required>
-      <option value="">How did you find us?</option>
-      <option>Canva</option><option>Instagram</option><option>Friend</option>
-      <option>Search Engine</option><option>Other</option>
-    </select><br>
-    <div style="margin:0.5em 0;">
-      <label for="captcha">Type this word: <b>Moxie</b></label><br>
-      <input id="captcha" name="captcha" placeholder="Enter here" required />
-    </div>
-    <label><input type="checkbox" name="consent" required /> I consent to join the Moxie waitlist.</label><br>
-    <button type="submit">Join Waitlist</button>
-    <p id="msg"></p>
-    <p class="privacy">🔒 <b>Privacy First:</b> Your info is securely stored in our Supabase database and never shared.</p>
-  </form>
-  <script>
-  const URL = "https://fhtjnzeoahqmdodgewiz.supabase.co/rest/v1/waitlist";
-  const KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZodGpuemVvYWhxbWRvZGdld2l6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTY2NTI5MzYsImV4cCI6MjA3MjIyODkzNn0.CqC50TXKRyYwJAEamPt57fwAN3szQ1eiI0PDW8qXGek";
-  const REDIRECT = "https://your-canva-site-url"; 
-  document.getElementById("waitlist").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const fd = new FormData(e.target);
-    const captcha = fd.get("captcha");
-    if (captcha.toLowerCase() !== "moxie") {
-      document.getElementById("msg").textContent = "Captcha incorrect. Try again.";
+  <main class="card" role="main" aria-labelledby="title">
+    <div class="brand" aria-hidden="true"></div>
+    <h1 id="title">Join the Moxie Waitlist</h1>
+
+    <form id="waitlist" autocomplete="on" novalidate>
+      <div class="row">
+        <input class="half" name="first_name" type="text" placeholder="First name" required />
+        <input class="half" name="email" type="email" placeholder="Email" required />
+      </div>
+<br>
+      <div class="row">
+        <select class="full" name="how_found" required>
+          <option value="">How did you find Moxie?</option>
+          <option value="Canva">Canva</option>
+          <option value="Instagram">Instagram</option>
+          <option value="Friend">Friend</option>
+          <option value="Search">Search engine</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="row captcha-line">
+        <div class="captcha-label">Type this word:</div>
+        <div style="font-weight:700;color:var(--accent)">Moxie</div>
+        <input class="full" id="captcha" name="captcha" type="text" placeholder="Enter the word above" required />
+      </div>
+
+      <div class="consent">
+        <input id="consent" name="consent" type="checkbox" required />
+        <label for="consent" class="muted">I consent to join the Moxie waitlist (privacy protected)</label>
+      </div>
+
+      <button class="btn" type="submit" id="submitBtn">Join Waitlist</button>
+
+      <p id="msg" class="msg" role="status" aria-live="polite"></p>
+      <footer class="note">🔒 Privacy first — stored securely; never sold. If you need immediate help, call/text **988**.</footer>
+    </form>
+  </main>
+
+<script>
+/*
+  CLIENT SIDE: lightweight validation + POST to a secure endpoint.
+  IMPORTANT: Do NOT put a service_role or secret key here.
+  
+*/
+
+const WAITLIST_ENDPOINT = "https://fhtjnzeoahqmdodgewiz.supabase.co/functions/v1/waitlist"; // REPLACE w/ your Edge Function URL
+const REDIRECT = "./thankyou.html";
+
+const form = document.getElementById("waitlist");
+const msg = document.getElementById("msg");
+const btn = document.getElementById("submitBtn");
+
+function setMsg(text, isError=false){
+  msg.textContent = text;
+  msg.style.color = isError ? '#a33' : '#6b5e50';
+}
+
+form.addEventListener("submit", async (ev) => {
+  ev.preventDefault();
+  setMsg("");
+
+  // basic form reads
+  const fd = new FormData(form);
+  const first_name = (fd.get("first_name")||"").trim();
+  const email = (fd.get("email")||"").trim();
+  const how_found = (fd.get("how_found")||"").trim();
+  const consent = !!fd.get("consent");
+  const captcha = (fd.get("captcha")||"").trim().toLowerCase();
+
+  // client validation
+  if(!first_name || !email || !how_found || !consent){
+    setMsg("Please fill all fields and check consent.", true);
+    return;
+  }
+  if(captcha !== "moxie"){
+    setMsg("Captcha incorrect. Please type the word shown.", true);
+    return;
+  }
+
+  // disable UI while sending
+  btn.disabled = true;
+  btn.textContent = "Sending…";
+
+  try {
+    const payload = { email, first_name, how_found, consent };
+
+    /*
+      Recommended: POST to your serverless proxy / edge function
+      POST JSON: { email, first_name, how_found, consent }
+      The server (Edge Function) validates and then writes to Supabase using a secure server-side key.
+    */
+    const res = await fetch(WAITLIST_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      credentials: "omit"
+    });
+
+    if (res.ok) {
+      // success: send user to thank-you
+      window.location.href = REDIRECT;
       return;
     }
-    const body = {
-      email: fd.get("email"),
-      first_name: fd.get("first_name"),
-      how_found: fd.get("how_found"),
-      consent: !!fd.get("consent")
-    };
-    const res = await fetch(URL + "?apikey=" + KEY, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + KEY,
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify(body)
-    });
-    if (res.ok) {
-      window.location.href = REDIRECT + "?thanks=1";
-    } else {
-      document.getElementById("msg").textContent = "Submission failed. Please try again.";
-    }
-  });
-  </script>
+
+    // read error message if any
+    const body = await res.json().catch(()=>null);
+    const err = body && body.message ? body.message : "Submission failed. Try again later.";
+    setMsg(err, true);
+
+  } catch (err) {
+    console.error(err);
+    setMsg("Network error. Try again later.", true);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Join Waitlist";
+  }
+});
+</script>
 </body>
 </html>
