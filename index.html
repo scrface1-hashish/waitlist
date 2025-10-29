@@ -156,7 +156,8 @@
 */
 
 const WAITLIST_ENDPOINT = "https://fhtjnzeoahqmdodgewiz.supabase.co/functions/v1/waitlist"; // REPLACE w/ your Edge Function URL
-const REDIRECT = "./thankyou.html";
+const ANON_KEY = "sb_publishable_RHjHGgwEJ2Guksq6gZqsCw_omDTeBlw";
+const REDIRECT = "https://scrface1-hashish.github.io/waitlist/thankyou.html";
 
 const form = document.getElementById("waitlist");
 const msg = document.getElementById("msg");
@@ -203,7 +204,14 @@ form.addEventListener("submit", async (ev) => {
     */
     const res = await fetch(WAITLIST_ENDPOINT, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+    "Content-Type": "application/json";
+    // required because your Edge Function is set to "Verify JWT with legacy secret"
+    "Authorization": `Bearer ${ANON_KEY}`;
+    // duplicate header is commonly shown in Supabase examples — useful for some infra
+    "apikey": ANON_KEY;
+    "Accept": "application/json"
+  },
       body: JSON.stringify(payload),
       credentials: "omit"
     });
