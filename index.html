@@ -16,8 +16,6 @@
     --muted: #6b5e50;
     --radius:14px;
   }
-
-  /* page */
   html,body { height:100%; margin:0; }
   body{
     font-family: Georgia, 'Times New Roman', serif;
@@ -25,10 +23,8 @@
     background: var(--bg-url) center top / cover no-repeat fixed;
     display:flex; align-items:center; justify-content:center;
     padding:40px 20px;
-    background-color:#efe5d2; /* fallback */
+    background-color:#efe5d2;
   }
-
-  /* center parchment card */
   .card{
     width:var(--panel-w);
     background: rgba(255,250,243,0.92);
@@ -39,12 +35,10 @@
     position:relative;
     backdrop-filter: blur(2px);
   }
-
-  /* floating circular icon (adjust size w/ --icon-size) */
   .brand {
     --icon-size:120px;
     position:absolute;
-    top: -65px; /* pulls icon up so it's partially above card */
+    top: -65px;
     left: 50%;
     transform: translateX(-50%);
     width:var(--icon-size);
@@ -54,11 +48,8 @@
     box-shadow: 0 8px 28px rgba(0,0,0,.22);
     border:4px solid rgba(255,250,243,0.85);
   }
-
   h1 { text-align:center; margin:36px 0 18px; color:#4a2f14; font-size:2.25rem; text-shadow:1px 1px 0 #fff1d6; }
   form{ max-width:640px; margin:0 auto; }
-
-  /* skinny, modern form controls */
   .field{ display:block; margin:10px 0; }
   input[type="text"], input[type="email"], select {
     width:100%;
@@ -71,17 +62,13 @@
   }
   input[type="text"]::placeholder, input[type="email"]::placeholder { color: #8a7a6a; }
   input[type="text"]:focus, input[type="email"]:focus, select:focus { outline:3px solid rgba(177,107,46,0.12); box-shadow:0 0 0 3px rgba(177,107,46,0.06) }
-
   .row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; justify-content:center; }
   .half{ flex:1 1 48%; min-width:160px; }
   .full{ flex:1 1 100%; }
-
   .captcha-line{ display:flex; gap:10px; align-items:center; }
   .captcha-label { font-weight:600; color:var(--muted); min-width:120px; text-align:left; }
-
   label.muted { display:block; margin:12px 0; color:var(--muted); font-size:.95rem; }
   .consent { display:flex; gap:10px; align-items:center; justify-content:center; margin-top:8px; }
-
   button.btn {
     display:block;
     margin:18px auto 6px;
@@ -95,12 +82,8 @@
     box-shadow: 0 4px 10px rgba(0,0,0,.12);
   }
   button.btn:hover{ background:var(--accent-dark) }
-
   p.msg { text-align:center; color:var(--muted); margin:8px 0 0; min-height:1.2em; }
-
   footer.note { text-align:center; color:var(--muted); margin-top:8px; font-size:.95rem; }
-
-  /* responsive tweaks */
   @media (max-width:560px){
     h1 { font-size:1.6rem; margin-top:20px; }
     .brand{ --icon-size:68px; top:-34px; }
@@ -117,7 +100,6 @@
         <input class="half" name="first_name" type="text" placeholder="First name" required />
         <input class="half" name="email" type="email" placeholder="Email" required />
       </div>
-<br>
       <div class="row">
         <select class="full" name="how_found" required>
           <option value="">How did you find Moxie?</option>
@@ -149,12 +131,15 @@
 
 <script>
 /*
-  CLIENT SIDE: lightweight validation + POST to a secure endpoint.
-  IMPORTANT: Do NOT put a service_role or secret key here.
+  Fixes applied:
+  - header object syntax corrected (commas not semicolons)
+  - removed client 'apikey' header (it caused CORS preflight rejection)
+  - send only Authorization: Bearer <publishable/anon> from browser (safe)
+  - safer response parsing
 */
 
-const WAITLIST_ENDPOINT = "https://fhtjnzeoahqmdodgewiz.supabase.co/functions/v1/waitlist"; // REPLACE w/ your Edge Function URL
-const ANON_KEY = "sb_publishable_RHjHGgwEJ2Guksq6gZqsCw_omDTeBlw"; // publishable / anon key (safe client-side)
+const WAITLIST_ENDPOINT = "https://fhtjnzeoahqmdodgewiz.supabase.co/functions/v1/waitlist";
+const ANON_KEY = "sb_publishable_RHjHGgwEJ2Guksq6gZqsCw_omDTeBlw"; // publishable / anon key (ok to expose)
 const REDIRECT = "https://scrface1-hashish.github.io/waitlist/thankyou.html";
 
 const form = document.getElementById("waitlist");
@@ -170,7 +155,6 @@ form.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   setMsg("");
 
-  // basic form reads
   const fd = new FormData(form);
   const first_name = (fd.get("first_name")||"").trim();
   const email = (fd.get("email")||"").trim();
@@ -178,7 +162,6 @@ form.addEventListener("submit", async (ev) => {
   const consent = !!fd.get("consent");
   const captcha = (fd.get("captcha")||"").trim().toLowerCase();
 
-  // client validation
   if(!first_name || !email || !how_found || !consent){
     setMsg("Please fill all fields and check consent.", true);
     return;
@@ -188,7 +171,6 @@ form.addEventListener("submit", async (ev) => {
     return;
   }
 
-  // disable UI while sending
   btn.disabled = true;
   btn.textContent = "Sending…";
 
@@ -199,9 +181,7 @@ form.addEventListener("submit", async (ev) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        // required when your function expects a verified header — use anon key not service_role
-        "Authorization": `Bearer ${ANON_KEY}`,
-        "apikey": ANON_KEY,
+        "Authorization": `Bearer ${ANON_KEY}`,   // <-- publishable/anon token only
         "Accept": "application/json"
       },
       body: JSON.stringify(payload),
@@ -209,20 +189,21 @@ form.addEventListener("submit", async (ev) => {
     });
 
     if (res.ok) {
-      // success: send user to thank-you
+      // success
       window.location.href = REDIRECT;
       return;
     }
 
-    // read error message if any
+    // try to read JSON error safely
     let body = null;
-    try { body = await res.json(); } catch(e) { body = null; }
-    const err = body && body.message ? body.message : ("Submission failed. Try again later. (HTTP " + res.status + ")");
-    setMsg(err, true);
-    console.error("Waitlist submit failed:", res.status, body);
+    try { body = await res.json(); } catch(e) {
+      try { body = await res.text(); } catch(e2) { body = null; }
+    }
+    const errMsg = body && (body.message || body.error || JSON.stringify(body)) || `Submission failed (status ${res.status})`;
+    setMsg(errMsg, true);
 
   } catch (err) {
-    console.error("Network/submit error:", err);
+    console.error("Submit error:", err);
     setMsg("Network error. Try again later.", true);
   } finally {
     btn.disabled = false;
